@@ -1,0 +1,37 @@
+---
+# This playbook contains common plays that will be run on my computer.
+
+- name: Add user
+  user:
+     name: hvad
+     comment: 'David Hannequin'
+     shell: /bin/zsh
+     state: present
+
+- name: Git clone MViniVim
+  git:
+     repo: https://github.com/sd65/MiniVim.git
+     dest: /var/tmp/MiniVim
+     clone: yes
+
+- name: Install MiniVim
+  shell: /var/tmp/MiniVim/install.sh
+  become: yes
+  become_user: hvad
+
+- name: Git clone Oh-my-zsh
+  git:
+     repo: https://github.com/robbyrussell/oh-my-zsh.git
+     dest: /var/tmp/oh-my-zsh
+     clone: yes
+
+- name: Install Oh-my-zsh
+  shell: /var/tmp/oh-my-zsh/tools/install.sh
+  become: yes
+  become_user: hvad
+
+- name: Set authorized ssh key for user
+  authorized_key:
+     user: hvad
+     state: present
+     key: "{{ lookup('file', 'hvad.pub') }}"

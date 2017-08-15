@@ -1,0 +1,20 @@
+---
+# This playbook contains common plays that will be run on my computer.
+
+- name: Install Base RPMs
+  dnf: name={{ item }} state=latest
+  with_items:
+    - vim
+    - zsh
+    - tmux
+    - screen
+    - git
+    - nmap
+    - tcpdump
+    - unzip
+    - htop
+    - fedora-packager
+    - kernel-devel 
+    - kernel-headers 
+    - gcc
+    - make 

@@ -1,0 +1,36 @@
+---
+# This playbook contains common plays that will be run on my computer.
+
+- name: Install Selinux Management
+  dnf: name={{ item }} state=present
+  with_items:
+    - libselinux-python
+    - libsemanage-python
+
+- name: set SELinux to enforcing
+  action: selinux policy=targeted state=enforcing
+
+- name: Install DNF Automatic
+  dnf: name=dnf-automatic state=present
+
+- name: Configure DNF Automatic security
+  lineinfile:
+     dest: /etc/dnf/automatic.conf
+     regexp: upgrade_type = default
+     line: upgrade_type = security
+
+- name: Configure DNF Automatic updates
+  lineinfile:
+     dest: /etc/dnf/automatic.conf
+     regexp: apply_updates = no
+     line: apply_updates = yes
+
+- name: Enable DNF Automatic 
+  systemd:
+     name: dnf-automatic.timer
+     enabled: yes
+
+- name: Restart DNF Automatic 
+  systemd:
+     name: dnf-automatic.timer
+     state: restarted
